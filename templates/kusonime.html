@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kusonime - Hasil Scraping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: white;
+            color: #11998e;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .info-card h2 {
+            color: #11998e;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-box .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .stat-box .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .anime-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            display: none; /* Sembunyikan by default, JS akan menampilkan */
+        }
+        
+        .anime-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .anime-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+        
+        .anime-content {
+            padding: 20px;
+        }
+        
+        .anime-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            min-height: 50px;
+        }
+        
+        .anime-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .anime-summary {
+            font-size: 0.85em;
+            color: #888;
+            line-height: 1.5;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            min-height: 60px;
+        }
+        
+        .anime-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .anime-link:hover {
+            transform: scale(1.05);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .no-data h2 {
+            color: #11998e;
+            margin-bottom: 15px;
+        }
+        
+        .timestamp {
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            margin-top: 30px;
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            background: #11998e;
+            color: white;
+        }
+
+        /* --- CSS PAGINATION BARU --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .pagination-btn {
+            padding: 12px 20px;
+            margin: 0 5px;
+            background: white;
+            color: #11998e;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .pagination-btn:hover {
+            transform: scale(1.05);
+        }
+        .pagination-btn:disabled {
+            background: #f0f0f0;
+            color: #aaa;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .page-info {
+            color: white;
+            font-weight: bold;
+            margin: 0 15px;
+            font-size: 1.1em;
+        }
+        /* --- AKHIR CSS PAGINATION --- */
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-btn">← Kembali ke Beranda</a>
+            <h1>🟢 Kusonime - Anime Terbaru</h1>
+        </header>
+        
+        {% if data and data.success %}
+        <div class="info-card">
+            <h2>📊 Statistik Scraping</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="label">Total Anime</div>
+                    <div class="value">{{ data.count }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Halaman Discan</div>
+                    <div class="value">{{ data.pages_scraped }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Waktu Eksekusi</div>
+                    <div class="value">{{ "%.2f"|format(data.execution_time) }}s</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Source URL</div>
+                    <div class="value" style="font-size: 1em;">
+                        <a href="{{ data.url }}" target="_blank" style="color: white;">Visit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="anime-grid">
+            {% for anime in data.data %}
+            <div class="anime-card">
+                <img src="{{ anime.image }}" alt="{{ anime.title }}" class="anime-image" 
+                     onerror="this.src='https://via.placeholder.com/280x350?text=No+Image'">
+                <div class="anime-content">
+                    <div class="anime-title">{{ anime.title }}</div>
+                    
+                    {% if anime.date != 'N/A' %}
+                    <div class="anime-info">
+                        <span>📅</span>
+                        <span>{{ anime.date }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if anime.genre != 'N/A' %}
+                    <div class="anime-info">
+                        <span class="badge">{{ anime.genre }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if anime.summary != 'N/A' %}
+                    <div class="anime-summary">{{ anime.summary }}</div>
+                    {% endif %}
+
+                    <div class="anime-info">
+                        <span>Halaman: {{ anime.source_page }}</span>
+                    </div>
+                    
+                    {% if anime.link != 'N/A' %}
+                    <a href="{{ anime.link }}" target="_blank" class="anime-link">Lihat Detail →</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if data.data|length > 0 %}
+        <div class="pagination">
+            <button id="prevBtn" class="pagination-btn" disabled>← Sebelumnya</button>
+            <span id="pageInfo" class="page-info">Halaman 1</span>
+            <button id="nextBtn" class="pagination-btn">Selanjutnya →</button>
+        </div>
+        {% endif %}
+        <div class="timestamp">
+            Waktu Scraping: {{ data.timestamp }}<br>
+            File JSON: <a href="/api/kusonime" style="color: white; text-decoration: underline;">results/kusonime.json</a>
+        </div>
+        
+        {% elif data and not data.success %}
+        <div class="info-card no-data">
+            <h2>❌ Scraping Gagal</h2>
+            <p>Error: {{ data.error }}</p>
+            <p style="margin-top: 20px;">Waktu eksekusi: {{ "%.2f"|format(data.execution_time) }}s</p>
+            <a href="/" class="back-btn" style="margin-top: 20px;">Coba Lagi</a>
+        </div>
+        
+        {% else %}
+        <div class="info-card no-data">
+            <h2>📭 Belum Ada Data</h2>
+            <p>Silakan jalankan scraper Kusonime terlebih dahulu dari halaman beranda.</p>
+            <a href="/" class="back-btn" style="margin-top: 20px;">Kembali ke Beranda</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Hanya jalankan skrip jika ada data
+        {% if data and data.success and data.data|length > 0 %}
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const itemsPerPage = 12; // Tentukan 12 item per halaman
+            const animeCards = document.querySelectorAll('.anime-card');
+            const totalItems = animeCards.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            let currentPage = 1;
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageInfo = document.getElementById('pageInfo');
+            const grid = document.querySelector('.anime-grid');
+
+            function showPage(page) {
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                // Sembunyikan semua card
+                animeCards.forEach((card, index) => {
+                    if (index >= startIndex && index < endIndex) {
+                        card.style.display = 'block'; // Tampilkan card untuk halaman ini
+                    } else {
+                        card.style.display = 'none'; // Sembunyikan card lain
+                    }
+                });
+
+                // Update info halaman dan status tombol
+                pageInfo.textContent = `Halaman ${page} dari ${totalPages}`;
+                prevBtn.disabled = page === 1;
+                nextBtn.disabled = page === totalPages;
+            }
+
+            // Tampilkan halaman pertama saat load
+            showPage(currentPage);
+
+            // Event listener untuk tombol "Next"
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                    // Scroll ke atas grid
+                    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+
+            // Event listener untuk tombol "Previous"
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                    // Scroll ke atas grid
+                    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+            
+            // Sembunyikan pagination jika hanya 1 halaman
+            if (totalPages <= 1) {
+                document.querySelector('.pagination').style.display = 'none';
+            }
+
+        });
+        {% endif %}
+    </script>
+    </body>
+</html>

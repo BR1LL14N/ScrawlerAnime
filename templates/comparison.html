@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perbandingan - OtakuDesu vs Kusonime</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .back-btn {
+        display: inline-block;
+        padding: 10px 25px;
+        background: white;
+        color: #667eea;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .back-btn:hover {
+        transform: scale(1.05);
+      }
+
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .site-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .site-card.otakudesu {
+        border-top: 5px solid #ff6b6b;
+      }
+
+      .site-card.kusonime {
+        border-top: 5px solid #11998e;
+      }
+
+      .site-card h2 {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .site-card h2.otakudesu {
+        color: #ff6b6b;
+      }
+
+      .site-card h2.kusonime {
+        color: #11998e;
+      }
+
+      .badge {
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: normal;
+      }
+
+      .badge.success {
+        background: #27ae60;
+        color: white;
+      }
+
+      .badge.error {
+        background: #e74c3c;
+        color: white;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .stat-row:last-child {
+        border-bottom: none;
+      }
+
+      .stat-label {
+        font-weight: bold;
+        color: #666;
+      }
+
+      .stat-value {
+        color: #333;
+      }
+
+      .winner-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+      }
+
+      .winner-card h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+      }
+
+      .winner-badge {
+        display: inline-block;
+        padding: 15px 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 30px;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin: 20px 0;
+      }
+
+      .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .chart-container h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+      }
+
+      /* --- PERBAIKAN CSS DIMULAI DI SINI --- */
+      .bar-chart {
+        display: flex;
+        /* align-items: flex-end; <-- DIHAPUS */
+        justify-content: space-around;
+        height: 300px;
+        padding: 20px 0;
+      }
+
+      .bar {
+        flex: 1;
+        margin: 0 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%; /* <-- DITAMBAH: agar .bar mengisi tinggi .bar-chart */
+        justify-content: flex-end; /* <-- DITAMBAH: agar isi (.bar-fill & .bar-label) nempel di bawah */
+      }
+      /* --- PERBAIKAN CSS SELESAI --- */
+
+      .bar-fill {
+        width: 100%;
+        background: linear-gradient(to top, #667eea, #764ba2);
+        border-radius: 10px 10px 0 0;
+        position: relative;
+        transition: all 0.5s ease;
+      }
+
+      .bar-fill.otakudesu {
+        background: linear-gradient(to top, #ff6b6b, #ee5a6f);
+      }
+
+      .bar-fill.kusonime {
+        background: linear-gradient(to top, #11998e, #38ef7d);
+      }
+
+      .bar-value {
+        position: absolute;
+        top: -30px;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .bar-label {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #666;
+      }
+
+      .no-data {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .timestamp {
+        text-align: center;
+        color: white;
+        font-size: 0.9em;
+        margin-top: 30px;
+        opacity: 0.9;
+      }
+
+      .view-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .view-btn {
+        flex: 1;
+        padding: 10px;
+        background: #f0f0f0;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+      }
+
+      .view-btn:hover {
+        background: #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a href="/" class="back-btn">← Kembali ke Beranda</a>
+        <h1>📊 Perbandingan Hasil Scraping</h1>
+      </header>
+
+      {% if otakudesu and kusonime %} {% if otakudesu.success and
+      kusonime.success %}
+      <div class="winner-card">
+        <h2>🏆 Scraping Tercepat</h2>
+        {% if otakudesu.execution_time < kusonime.execution_time %}
+        <div
+          class="winner-badge"
+          style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)"
+        >
+          🔴 OtakuDesu
+        </div>
+        <p>
+          Lebih cepat {{ "%.2f"|format(kusonime.execution_time -
+          otakudesu.execution_time) }} detik
+        </p>
+        {% else %}
+        <div
+          class="winner-badge"
+          style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%)"
+        >
+          🟢 Kusonime
+        </div>
+        <p>
+          Lebih cepat {{ "%.2f"|format(otakudesu.execution_time -
+          kusonime.execution_time) }} detik
+        </p>
+        {% endif %}
+      </div>
+
+      <div class="chart-container">
+        <h2>📈 Grafik Waktu Eksekusi</h2>
+        <div class="bar-chart">
+          <div class="bar">
+            <div
+              class="bar-fill otakudesu"
+              style="height: {{ (otakudesu.execution_time / [otakudesu.execution_time, kusonime.execution_time]|max * 100)|round }}%;"
+            >
+              <div class="bar-value">
+                {{ "%.2f"|format(otakudesu.execution_time) }}s
+              </div>
+            </div>
+            <div class="bar-label">OtakuDesu</div>
+          </div>
+          <div class="bar">
+            <div
+              class="bar-fill kusonime"
+              style="height: {{ (kusonime.execution_time / [otakudesu.execution_time, kusonime.execution_time]|max * 100)|round }}%;"
+            >
+              <div class="bar-value">
+                {{ "%.2f"|format(kusonime.execution_time) }}s
+              </div>
+            </div>
+            <div class="bar-label">Kusonime</div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="comparison-grid">
+        <div class="site-card otakudesu">
+          <h2 class="otakudesu">
+            🔴 OtakuDesu
+            <span
+              class="badge {{ 'success' if otakudesu.success else 'error' }}"
+            >
+              {{ 'Berhasil' if otakudesu.success else 'Gagal' }}
+            </span>
+          </h2>
+
+          {% if otakudesu.success %}
+          <div class="stat-row">
+            <span class="stat-label">Total Anime:</span>
+            <span class="stat-value">{{ otakudesu.count }} anime</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Waktu Eksekusi:</span>
+            <span class="stat-value"
+              >{{ "%.2f"|format(otakudesu.execution_time) }} detik</span
+            >
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Waktu Scraping:</span>
+            <span class="stat-value"
+              >{{ otakudesu.timestamp.split('T')[1].split('.')[0] }}</span
+            >
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">URL Source:</span>
+            <span class="stat-value">
+              <a
+                href="{{ otakudesu.url }}"
+                target="_blank"
+                style="color: #ff6b6b"
+                >Visit</a
+              >
+            </span>
+          </div>
+
+          <div class="view-buttons">
+            <a href="/otakudesu" class="view-btn">👁️ Lihat Detail</a>
+            <a href="/api/otakudesu" target="_blank" class="view-btn"
+              >📋 JSON</a
+            >
+          </div>
+          {% else %}
+          <p style="color: #e74c3c">Error: {{ otakudesu.error }}</p>
+          {% endif %}
+        </div>
+
+        <div class="site-card kusonime">
+          <h2 class="kusonime">
+            🟢 Kusonime
+            <span
+              class="badge {{ 'success' if kusonime.success else 'error' }}"
+            >
+              {{ 'Berhasil' if kusonime.success else 'Gagal' }}
+            </span>
+          </h2>
+
+          {% if kusonime.success %}
+          <div class="stat-row">
+            <span class="stat-label">Total Anime:</span>
+            <span class="stat-value">{{ kusonime.count }} anime</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Waktu Eksekusi:</span>
+            <span class="stat-value"
+              >{{ "%.2f"|format(kusonime.execution_time) }} detik</span
+            >
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Waktu Scraping:</span>
+            <span class="stat-value"
+              >{{ kusonime.timestamp.split('T')[1].split('.')[0] }}</span
+            >
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">URL Source:</span>
+            <span class="stat-value">
+              <a
+                href="{{ kusonime.url }}"
+                target="_blank"
+                style="color: #11998e"
+                >Visit</a
+              >
+            </span>
+          </div>
+
+          <div class="view-buttons">
+            <a href="/kusonime" class="view-btn">👁️ Lihat Detail</a>
+            <a href="/api/kusonime" target="_blank" class="view-btn">📋 JSON</a>
+          </div>
+          {% else %}
+          <p style="color: #e74c3c">Error: {{ kusonime.error }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="timestamp">
+        Data terakhir diperbarui: {{ (otakudesu.timestamp if otakudesu else
+        kusonime.timestamp) if (otakudesu or kusonime) else 'N/A' }}
+      </div>
+
+      {% else %}
+      <div class="chart-container no-data">
+        <h2>📭 Belum Ada Data</h2>
+        <p>Silakan jalankan scraper terlebih dahulu dari halaman beranda.</p>
+        <a href="/" class="back-btn" style="margin-top: 20px"
+          >Kembali ke Beranda</a
+        >
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
