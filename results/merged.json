@@ -1,11 +1,9 @@
 {
-  "success": true,
-  "site": "OtakuDesu",
-  "url": "https://otakudesu.best/ongoing-anime/",
-  "pages_scraped": 2,
-  "timestamp": "2025-11-14T11:17:35.483668",
-  "execution_time": 2.007706880569458,
-  "data": [
+  "timestamp": "2025-11-14T11:17:36.403425",
+  "total_otakudesu": 50,
+  "total_kusonime": 20,
+  "matches": [],
+  "otakudesu_only": [
     {
       "title": "Akujiki Reijou to Kyouketsu Koushaku",
       "episode": "Episode 7",
@@ -457,5 +455,186 @@
       "source_page": 2
     }
   ],
-  "count": 50
+  "kusonime_only": [
+    {
+      "title": "Star Wars: Visions Volume 3 Batch Subtitle Indonesia",
+      "date": "Released on 3:30 pm",
+      "genre": "Action, Adventure, Military, Sci-Fi, Space",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Star-Wars-Visions-Volume-3.jpeg",
+      "link": "https://kusonime.com/starwars-visions-s3-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Star Wars: Visions Volume 2 Batch Subtitle Indonesia",
+      "date": "Released on 3:15 pm",
+      "genre": "Action, Adventure, Military, Sci-Fi, Space",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Star-Wars-Visions-Volume-2.jpg",
+      "link": "https://kusonime.com/starwars-visions-s2-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Star Wars: Visions Batch Subtitle Indonesia",
+      "date": "Released on 3:00 pm",
+      "genre": "Action, Adventure, Military, Sci-Fi, Space",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Star-Wars-Visions.jpg",
+      "link": "https://kusonime.com/starwars-visions-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Phantom: Requiem for the Phantom BD Batch Subtitle Indonesia",
+      "date": "Released on 4:00 pm",
+      "genre": "Action, Drama, Seinen, Thriller",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2017/07/Phantom-Requiem-for-the-Phantom.jpg",
+      "link": "https://kusonime.com/phantom-requiem-phantom-bd-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Tatsuki Fujimoto 17-26 Batch Subtitle Indonesia",
+      "date": "Released on 10:00 am",
+      "genre": "Action, Comedy, Drama, Romance, School, Shounen, Supernatural",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Tatsuki-Fujimoto-17-26.jpg",
+      "link": "https://kusonime.com/tatsukifujimoto-1726-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Himesama “Goumon” no Jikan desu BD Batch Subtitle Indonesia",
+      "date": "Released on 8:00 am",
+      "genre": "Comedy, Fantasy, Shounen",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2024/01/Himesama-Goumon-no-Jikan-desu.jpg",
+      "link": "https://kusonime.com/himesama-goumon-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Shiunji-ke no Kodomotachi BD Batch Subtitle Indonesia",
+      "date": "Released on 5:00 pm",
+      "genre": "Comedy, School, Slice of Life",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/01/The-Children-of-Shiunji-Family.jpg",
+      "link": "https://kusonime.com/shiunjifamily-batch-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Argonavis Movie: Axia Subtitle Indonesia",
+      "date": "Released on 2:30 pm",
+      "genre": "Drama, Music",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Argonavis-Movie-Axia.jpg",
+      "link": "https://kusonime.com/bandori-argonavis-movie-axia-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Argonavis Movie: Ryuusei no Obligato Subtitle Indonesia",
+      "date": "Released on 1:05 pm",
+      "genre": "Drama, Music",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Argonavis-Movie-Ryuusei-no-Obligato.jpg",
+      "link": "https://kusonime.com/bandori-argonavis-movie-obligato-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Gegege no Kitarou: Obake Nighter Subtitle Indonesia",
+      "date": "Released on 5:00 am",
+      "genre": "Sports, Supernatural",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/08/Gegege-no-Kitarou-Obake-Nighter.jpg",
+      "link": "https://kusonime.com/gegege-no-kitarou-obakenighter-subtitle-indonesia/",
+      "source_page": 1
+    },
+    {
+      "title": "Project Sekai Movie: Kowareta Sekai to Utaenai Miku BD Subtitle Indonesia",
+      "date": "Released on 4:00 pm",
+      "genre": "Music",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/11/Project-Sekai-Movie-Kowareta-Sekai-to-Utaenai-Miku.jpg",
+      "link": "https://kusonime.com/pjsekai-movie-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Kuragehime BD Batch Subtitle Indonesia",
+      "date": "Released on 10:54 pm",
+      "genre": "Comedy, Josei, Slice of Life",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2017/07/Kuragehime.jpg",
+      "link": "https://kusonime.com/kuragehime-bd-batch-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Fumetsu no Anata e Season 2 BD Batch Subtitle Indonesia",
+      "date": "Released on 7:00 pm",
+      "genre": "Adventure, Drama, Shounen, Supernatural",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2022/10/Fumetsu-no-Anata-e-Season-2.jpg",
+      "link": "https://kusonime.com/fumetsu-no-anata-e-s2-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Slime Taoshite 300-nen Shiranai Uchi ni Level Max ni Nattemashita Season 2 BD Batch Subtitle Indonesia",
+      "date": "Released on 6:00 am",
+      "genre": "Comedy, Fantasy, Slice of Life",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/04/Slime-Taoshite-300-nen-S2.jpg",
+      "link": "https://kusonime.com/slime-300-s2-batch-sub-indo/",
+      "source_page": 2
+    },
+    {
+      "title": "Gekijo Ban: Acma:Game – Saigo no Kagi Live Action (2024) Subtitle Indonesia",
+      "date": "Released on 5:21 pm",
+      "genre": "Action, Adventure, Fantasy, Mystery",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/10/Gekijo-Ban-Acma-Game-Saigo-no-Kagi-Live-Action-2025.jpg",
+      "link": "https://kusonime.com/acmagame-movie-la-2025-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Acma:Game: Aratana Kagi Live Action (2024) Batch Subtitle Indonesia",
+      "date": "Released on 5:06 pm",
+      "genre": "Action, Psychological, Supernatural",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/10/Acma-Game-Aratana-Kagi-Live-Action-2024.jpg",
+      "link": "https://kusonime.com/acmagame-sp-la-2024-batch-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Acma:Game Live Action (2024) Batch Subtitle Indonesia",
+      "date": "Released on 4:53 pm",
+      "genre": "Action, Drama, Mystery, Supernatural",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/10/Acma-Game-Live-Action-2024.jpg",
+      "link": "https://kusonime.com/acmagame-la-2024-batch-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Okinawa de Suki ni Natta Ko ga Hougen Sugite Tsurasugiru BD Batch Subtitle Indonesia",
+      "date": "Released on 6:00 am",
+      "genre": "Comedy, Romance, School",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/01/Okinawa-de-Suki-ni-Natta-Ko-ga-Hougen-Sugite-Tsurasugiru.jpg",
+      "link": "https://kusonime.com/okitsura-batch-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Bouken Ou Beet Batch Subtitle Indonesia",
+      "date": "Released on 9:26 pm",
+      "genre": "Action, Adventure, Fantasy, Shounen",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2025/10/Bouken-Ou-Beet.jpg",
+      "link": "https://kusonime.com/bouken-ou-beet-batch-subtitle-indonesia/",
+      "source_page": 2
+    },
+    {
+      "title": "Idaten Jump Batch Subtitle Indonesia",
+      "date": "Released on 5:00 am",
+      "genre": "Game, School, Sports",
+      "summary": "Posted by Admin...",
+      "image": "https://kusonime.com/wp-content/uploads/2017/10/Idaten-Jump.jpg",
+      "link": "https://kusonime.com/idaten-jump-batch-subtitle-indonesia/",
+      "source_page": 2
+    }
+  ]
 }

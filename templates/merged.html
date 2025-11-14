@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perbandingan Lengkap Anime</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .tab:hover {
+            transform: scale(1.05);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .comparison-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .comparison-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .comparison-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: #eee;
+        }
+        
+        .site-data {
+            background: white;
+            padding: 20px;
+        }
+        
+        .site-data.otakudesu {
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .site-data.kusonime {
+            border-left: 4px solid #11998e;
+        }
+        
+        .site-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .site-label.otakudesu {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .site-label.kusonime {
+            background: #11998e;
+            color: white;
+        }
+        
+        .anime-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .anime-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .anime-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .anime-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        
+        .single-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .single-card .anime-image {
+            height: 300px;
+        }
+        
+        .single-card .content {
+            padding: 20px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            color: #666;
+        }
+
+        .filter-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group input, .filter-group select {
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .pagination-btn {
+            padding: 12px 20px;
+            margin: 0 5px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .pagination-btn:disabled {
+            background: #f0f0f0;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            color: white;
+            font-weight: bold;
+            margin: 0 15px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-btn">← Kembali ke Beranda</a>
+            <h1>📊 Perbandingan Lengkap Anime</h1>
+        </header>
+        
+        {% if data %}
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Total OtakuDesu</h3>
+                <div class="value">{{ data.total_otakudesu }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Kusonime</h3>
+                <div class="value">{{ data.total_kusonime }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Anime Sama</h3>
+                <div class="value">{{ data.matches|length }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>OtakuDesu Eksklusif</h3>
+                <div class="value">{{ data.otakudesu_only|length }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Kusonime Eksklusif</h3>
+                <div class="value">{{ data.kusonime_only|length }}</div>
+            </div>
+        </div>
+
+        <div class="filter-container">
+            <div class="filter-group">
+                <input type="text" id="searchInput" placeholder="🔍 Cari anime..." style="flex: 1; min-width: 200px;">
+                <select id="sortSelect">
+                    <option value="default">Urutan Default</option>
+                    <option value="title">Urutkan A-Z</option>
+                    <option value="title-desc">Urutkan Z-A</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('matches')">
+                🎯 Anime yang Sama ({{ data.matches|length }})
+            </button>
+            <button class="tab" onclick="showTab('otakudesu')">
+                🔴 Eksklusif OtakuDesu ({{ data.otakudesu_only|length }})
+            </button>
+            <button class="tab" onclick="showTab('kusonime')">
+                🟢 Eksklusif Kusonime ({{ data.kusonime_only|length }})
+            </button>
+        </div>
+        
+        <!-- Tab: Matches -->
+        <div id="matches" class="tab-content active">
+            <div class="anime-grid">
+                {% for match in data.matches %}
+                <div class="comparison-card anime-item" data-title="{{ match.title|lower }}">
+                    <div class="comparison-header">
+                        {{ match.title }}
+                    </div>
+                    <div class="comparison-body">
+                        <div class="site-data otakudesu">
+                            <div class="site-label otakudesu">🔴 OtakuDesu</div>
+                            <img src="{{ match.otakudesu.image }}" class="anime-image" 
+                                 onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            {% if match.otakudesu.episode != 'N/A' %}
+                            <div class="anime-info">📺 {{ match.otakudesu.episode }}</div>
+                            {% endif %}
+                            {% if match.otakudesu.day != 'N/A' %}
+                            <div class="anime-info">📅 {{ match.otakudesu.day }}</div>
+                            {% endif %}
+                            {% if match.otakudesu.rating != 'N/A' %}
+                            <div class="anime-info">⭐ {{ match.otakudesu.rating }}</div>
+                            {% endif %}
+                            {% if match.otakudesu.link != 'N/A' %}
+                            <a href="{{ match.otakudesu.link }}" target="_blank" class="anime-link">Lihat Detail</a>
+                            {% endif %}
+                        </div>
+                        <div class="site-data kusonime">
+                            <div class="site-label kusonime">🟢 Kusonime</div>
+                            <img src="{{ match.kusonime.image }}" class="anime-image"
+                                 onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            {% if match.kusonime.date != 'N/A' %}
+                            <div class="anime-info">📅 {{ match.kusonime.date }}</div>
+                            {% endif %}
+                            {% if match.kusonime.genre != 'N/A' %}
+                            <div class="anime-info">🏷️ {{ match.kusonime.genre }}</div>
+                            {% endif %}
+                            {% if match.kusonime.summary != 'N/A' %}
+                            <div class="anime-info">{{ match.kusonime.summary }}</div>
+                            {% endif %}
+                            {% if match.kusonime.link != 'N/A' %}
+                            <a href="{{ match.kusonime.link }}" target="_blank" class="anime-link">Lihat Detail</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if data.matches|length > 12 %}
+            <div class="pagination">
+                <button id="prevBtn-matches" class="pagination-btn" disabled>← Sebelumnya</button>
+                <span id="pageInfo-matches" class="page-info">Halaman 1</span>
+                <button id="nextBtn-matches" class="pagination-btn">Selanjutnya →</button>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Tab: OtakuDesu Only -->
+        <div id="otakudesu" class="tab-content">
+            <div class="anime-grid">
+                {% for anime in data.otakudesu_only %}
+                <div class="single-card anime-item" data-title="{{ anime.title|lower }}">
+                    <img src="{{ anime.image }}" class="anime-image"
+                         onerror="this.src='https://via.placeholder.com/300x300?text=No+Image'">
+                    <div class="content">
+                        <div class="site-label otakudesu">🔴 OtakuDesu</div>
+                        <div class="anime-title">{{ anime.title }}</div>
+                        {% if anime.episode != 'N/A' %}
+                        <div class="anime-info">📺 {{ anime.episode }}</div>
+                        {% endif %}
+                        {% if anime.day != 'N/A' %}
+                        <div class="anime-info">📅 {{ anime.day }}</div>
+                        {% endif %}
+                        {% if anime.rating != 'N/A' %}
+                        <div class="anime-info">⭐ {{ anime.rating }}</div>
+                        {% endif %}
+                        {% if anime.link != 'N/A' %}
+                        <a href="{{ anime.link }}" target="_blank" class="anime-link">Lihat Detail</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if data.otakudesu_only|length > 12 %}
+            <div class="pagination">
+                <button id="prevBtn-otakudesu" class="pagination-btn" disabled>← Sebelumnya</button>
+                <span id="pageInfo-otakudesu" class="page-info">Halaman 1</span>
+                <button id="nextBtn-otakudesu" class="pagination-btn">Selanjutnya →</button>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Tab: Kusonime Only -->
+        <div id="kusonime" class="tab-content">
+            <div class="anime-grid">
+                {% for anime in data.kusonime_only %}
+                <div class="single-card anime-item" data-title="{{ anime.title|lower }}">
+                    <img src="{{ anime.image }}" class="anime-image"
+                         onerror="this.src='https://via.placeholder.com/300x300?text=No+Image'">
+                    <div class="content">
+                        <div class="site-label kusonime">🟢 Kusonime</div>
+                        <div class="anime-title">{{ anime.title }}</div>
+                        {% if anime.date != 'N/A' %}
+                        <div class="anime-info">📅 {{ anime.date }}</div>
+                        {% endif %}
+                        {% if anime.genre != 'N/A' %}
+                        <div class="anime-info">🏷️ {{ anime.genre }}</div>
+                        {% endif %}
+                        {% if anime.summary != 'N/A' %}
+                        <div class="anime-info">{{ anime.summary }}</div>
+                        {% endif %}
+                        {% if anime.link != 'N/A' %}
+                        <a href="{{ anime.link }}" target="_blank" class="anime-link">Lihat Detail</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if data.kusonime_only|length > 12 %}
+            <div class="pagination">
+                <button id="prevBtn-kusonime" class="pagination-btn" disabled>← Sebelumnya</button>
+                <span id="pageInfo-kusonime" class="page-info">Halaman 1</span>
+                <button id="nextBtn-kusonime" class="pagination-btn">Selanjutnya →</button>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% else %}
+        <div class="no-data">
+            <h2>📭 Belum Ada Data</h2>
+            <p>Silakan jalankan scraper terlebih dahulu dari halaman beranda.</p>
+            <a href="/" class="back-btn" style="margin-top: 20px;">Kembali ke Beranda</a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all tab buttons
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+
+        searchInput.addEventListener('input', filterAnime);
+        sortSelect.addEventListener('change', filterAnime);
+
+        function filterAnime() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const sortValue = sortSelect.value;
+            const activeTab = document.querySelector('.tab-content.active');
+            const items = Array.from(activeTab.querySelectorAll('.anime-item'));
+
+            // Filter
+            items.forEach(item => {
+                const title = item.getAttribute('data-title');
+                if (title.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Sort
+            if (sortValue !== 'default') {
+                const grid = activeTab.querySelector('.anime-grid');
+                const visibleItems = items.filter(item => item.style.display !== 'none');
+                
+                visibleItems.sort((a, b) => {
+                    const titleA = a.getAttribute('data-title');
+                    const titleB = b.getAttribute('data-title');
+                    
+                    if (sortValue === 'title') {
+                        return titleA.localeCompare(titleB);
+                    } else if (sortValue === 'title-desc') {
+                        return titleB.localeCompare(titleA);
+                    }
+                    return 0;
+                });
+
+                visibleItems.forEach(item => grid.appendChild(item));
+            }
+        }
+
+        // Pagination setup for each tab
+        function setupPagination(tabName) {
+            const itemsPerPage = 12;
+            const tab = document.getElementById(tabName);
+            if (!tab) return;
+
+            const items = tab.querySelectorAll('.anime-item');
+            const totalItems = items.length;
+            
+            if (totalItems <= itemsPerPage) return;
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            let currentPage = 1;
+
+            const prevBtn = document.getElementById(`prevBtn-${tabName}`);
+            const nextBtn = document.getElementById(`nextBtn-${tabName}`);
+            const pageInfo = document.getElementById(`pageInfo-${tabName}`);
+
+            if (!prevBtn || !nextBtn || !pageInfo) return;
+
+            function showPage(page) {
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+
+                items.forEach((item, index) => {
+                    if (index >= start && index < end) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                pageInfo.textContent = `Halaman ${page} dari ${totalPages}`;
+                prevBtn.disabled = page === 1;
+                nextBtn.disabled = page === totalPages;
+            }
+
+            showPage(1);
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            });
+        }
+
+        // Initialize pagination for all tabs
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPagination('matches');
+            setupPagination('otakudesu');
+            setupPagination('kusonime');
+        });
+    </script>
+</body>
+</html>

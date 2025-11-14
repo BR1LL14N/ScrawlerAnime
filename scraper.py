@@ -5,6 +5,7 @@ import json
 import time
 from datetime import datetime
 import os
+import hashlib
 
 class AnimeScraper:
     def __init__(self):
@@ -12,14 +13,110 @@ class AnimeScraper:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
         self.results_dir = 'results'
+        self.history_dir = 'history'
         os.makedirs(self.results_dir, exist_ok=True)
+        os.makedirs(self.history_dir, exist_ok=True)
+        
+    def save_to_history(self, site_name, result):
+        """Save scraping result to history with timestamp"""
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'{self.history_dir}/{site_name}_{timestamp}.json'
+        
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        
+        return filename
+    
+    def get_history(self, site_name=None, limit=10):
+        """Get scraping history, optionally filtered by site"""
+        history_files = []
+        
+        for filename in os.listdir(self.history_dir):
+            if filename.endswith('.json'):
+                if site_name and not filename.startswith(site_name):
+                    continue
+                    
+                filepath = os.path.join(self.history_dir, filename)
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    history_files.append({
+                        'filename': filename,
+                        'filepath': filepath,
+                        'site': data.get('site', 'Unknown'),
+                        'timestamp': data.get('timestamp'),
+                        'count': data.get('count', 0),
+                        'success': data.get('success', False),
+                        'execution_time': data.get('execution_time', 0)
+                    })
+        
+        # Sort by timestamp descending
+        history_files.sort(key=lambda x: x['timestamp'], reverse=True)
+        
+        return history_files[:limit]
+    
+    def merge_anime_data(self):
+        """Merge anime data from both sites and find matches"""
+        otakudesu = self.load_json('otakudesu.json')
+        kusonime = self.load_json('kusonime.json')
+        
+        if not otakudesu or not kusonime:
+            return None
+        
+        merged_data = {
+            'timestamp': datetime.now().isoformat(),
+            'total_otakudesu': otakudesu.get('count', 0),
+            'total_kusonime': kusonime.get('count', 0),
+            'matches': [],
+            'otakudesu_only': [],
+            'kusonime_only': []
+        }
+        
+        # Normalize titles for comparison
+        def normalize_title(title):
+            return title.lower().replace(' ', '').replace('-', '')
+        
+        # Create dictionaries for quick lookup
+        otaku_dict = {normalize_title(anime['title']): anime 
+                      for anime in otakudesu.get('data', [])}
+        kuso_dict = {normalize_title(anime['title']): anime 
+                     for anime in kusonime.get('data', [])}
+        
+        # Find matches
+        for norm_title, otaku_anime in otaku_dict.items():
+            if norm_title in kuso_dict:
+                merged_data['matches'].append({
+                    'title': otaku_anime['title'],
+                    'otakudesu': otaku_anime,
+                    'kusonime': kuso_dict[norm_title],
+                    'match_score': 100
+                })
+            else:
+                merged_data['otakudesu_only'].append(otaku_anime)
+        
+        # Find Kusonime-only entries
+        for norm_title, kuso_anime in kuso_dict.items():
+            if norm_title not in otaku_dict:
+                merged_data['kusonime_only'].append(kuso_anime)
+        
+        # Save merged data
+        with open(f'{self.results_dir}/merged.json', 'w', encoding='utf-8') as f:
+            json.dump(merged_data, f, indent=2, ensure_ascii=False)
+        
+        return merged_data
+    
+    def load_json(self, filename):
+        """Load JSON file"""
+        try:
+            filepath = os.path.join(self.results_dir, filename)
+            with open(filepath, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return None
         
     def scrape_otakudesu(self, max_pages=4):
         """Scrape anime list from OtakuDesu with pagination."""
         start_time = time.time()
-        # URL dasar diubah sesuai permintaan
         base_url = 'https://otakudesu.best/ongoing-anime/'
-        # List untuk menampung semua anime dari semua halaman
         all_anime = [] 
         
         print(f"[Otakudesu] Mulai scraping. Target: {max_pages} halaman.")
@@ -33,19 +130,18 @@ class AnimeScraper:
                 
                 print(f"[Otakudesu] Scraping halaman {page}: {url}")
                 response = requests.get(url, headers=self.headers, timeout=10)
-                response.raise_for_status() # Cek jika ada error HTTP
+                response.raise_for_status()
                 
                 soup = BeautifulSoup(response.content, 'html.parser')
                 
                 anime_items = soup.find_all('div', class_='detpost')
                 
-                # Jika tidak ada item, berarti halaman sudah habis
                 if not anime_items:
                     print(f"[Otakudesu] Halaman {page} kosong. Berhenti.")
                     break
                 
                 page_item_count = 0
-                for item in anime_items: # Hapus limit [:15]
+                for item in anime_items:
                     try:
                         title_elem = item.find('h2', class_='jdlflm')
                         title = title_elem.text.strip() if title_elem else 'N/A'
@@ -72,7 +168,7 @@ class AnimeScraper:
                             'rating': rating,
                             'image': image,
                             'link': link,
-                            'source_page': page # Info tambahan
+                            'source_page': page
                         })
                         page_item_count += 1
                     except Exception as e:
@@ -80,7 +176,7 @@ class AnimeScraper:
                         continue
                 
                 print(f"[Otakudesu] Selesai halaman {page}, {page_item_count} item ditemukan.")
-                time.sleep(0.5) # Jeda antar request halaman
+                time.sleep(0.5)
             
             end_time = time.time()
             execution_time = end_time - start_time
@@ -88,7 +184,7 @@ class AnimeScraper:
             result = {
                 'success': True,
                 'site': 'OtakuDesu',
-                'url': base_url, # URL dasar
+                'url': base_url,
                 'pages_scraped': page if page > 1 else 1,
                 'timestamp': datetime.now().isoformat(),
                 'execution_time': execution_time,
@@ -99,7 +195,10 @@ class AnimeScraper:
             with open(f'{self.results_dir}/otakudesu.json', 'w', encoding='utf-8') as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
             
-            print(f"✓ OtakuDesu scraped: {len(all_anime)} anime (dari {page if page > 1 else 1} halaman) in {execution_time:.2f}s")
+            # Save to history
+            self.save_to_history('otakudesu', result)
+            
+            print(f"✓ OtakuDesu scraped: {len(all_anime)} anime in {execution_time:.2f}s")
             return result
             
         except Exception as e:
@@ -111,10 +210,12 @@ class AnimeScraper:
                 'timestamp': datetime.now().isoformat(),
                 'execution_time': execution_time,
                 'error': str(e),
-                'data': all_anime # Kembalikan data yg sudah didapat sblm error
+                'data': all_anime
             }
             with open(f'{self.results_dir}/otakudesu.json', 'w', encoding='utf-8') as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
+            
+            self.save_to_history('otakudesu', result)
             return result
     
     def scrape_kusonime(self, max_pages=4):
@@ -122,7 +223,7 @@ class AnimeScraper:
         start_time = time.time()
         base_url = 'https://kusonime.com/'
         all_anime = []
-        pages_successfully_scraped = 0 # Pelacak halaman yang sukses
+        pages_successfully_scraped = 0
 
         print(f"[Kusonime] Mulai scraping. Target: {max_pages} halaman.")
         
@@ -139,25 +240,18 @@ class AnimeScraper:
                 
                 soup = BeautifulSoup(response.content, 'html.parser')
                 
-                # --- PERBAIKAN 1: LOGIKA SELECTOR GANDA ---
-                # Halaman 1 (homepage) menggunakan 'div.detpost'
-                # Halaman 2, 3, dst (arsip) menggunakan 'article'
                 posts = soup.find_all('div', class_='detpost')
                 if not posts:
                     print(f"[Kusonime] 'div.detpost' tidak ditemukan di hal {page}, mencoba 'article'...")
                     posts = soup.find_all('article')
-                # --- BATAS PERBAIKAN 1 ---
 
                 if not posts:
-                    print(f"[Kusonime] Halaman {page} kosong (tidak ada 'detpost' atau 'article'). Berhenti.")
+                    print(f"[Kusonime] Halaman {page} kosong. Berhenti.")
                     break
                 
                 page_item_count = 0
-                for post in posts: # Hapus limit
+                for post in posts:
                     try:
-                        # --- PERBAIKAN 2: LOGIKA PARSING FLEKSIBEL ---
-                        # Menggunakan logika parsing Anda sebelumnya yang lebih robust
-                        
                         title_elem = post.find(['h2', 'h1'], class_=['episodeye', 'title'])
                         if not title_elem:
                             title_elem = post.find('a', rel='bookmark')
@@ -169,7 +263,6 @@ class AnimeScraper:
                         img_elem = post.find('img')
                         image = img_elem['src'] if img_elem and 'src' in img_elem.attrs else 'https://via.placeholder.com/150'
                         
-                        # Coba ambil tanggal dari 'fa-clock-o' (di homepage) atau 'time' (di arsip)
                         date_elem = post.find('i', class_='fa-clock-o')
                         if date_elem:
                             date = date_elem.parent.text.strip()
@@ -177,7 +270,6 @@ class AnimeScraper:
                             date_elem = post.find('time') or post.find('span', class_='date')
                             date = date_elem.text.strip() if date_elem else 'N/A'
                         
-                        # Coba ambil genre dari 'fa-tag' (di homepage) atau 'romaji' (di arsip)
                         genre_p = post.find('i', class_='fa-tag')
                         if genre_p:
                             genre_links = genre_p.parent.find_all('a')
@@ -186,16 +278,13 @@ class AnimeScraper:
                             genre_elem = post.find('span', class_='romaji')
                             genre = genre_elem.text.strip() if genre_elem else 'N/A'
                         
-                        # Summary (jika ada)
                         summary_elem = post.find('div', class_='excerpt') or post.find('p')
                         summary_text = summary_elem.text.strip() if summary_elem else 'N/A'
                         
-                        # Pastikan summary bukan text genre atau date
                         if summary_text in [genre, date]:
                             summary = 'N/A'
                         else:
                             summary = summary_text[:100] + '...' if summary_text != 'N/A' else 'N/A'
-                        # --- BATAS PERBAIKAN 2 ---
 
                         all_anime.append({
                             'title': title,
@@ -208,11 +297,11 @@ class AnimeScraper:
                         })
                         page_item_count += 1
                     except Exception as e:
-                        print(f"Error parsing Kusonime item: {e} | {post.text[:50]}...")
+                        print(f"Error parsing Kusonime item: {e}")
                         continue
                 
                 print(f"[Kusonime] Selesai halaman {page}, {page_item_count} item ditemukan.")
-                pages_successfully_scraped = page # Tandai halaman ini sukses
+                pages_successfully_scraped = page
                 time.sleep(0.5) 
 
             end_time = time.time()
@@ -222,7 +311,7 @@ class AnimeScraper:
                 'success': True,
                 'site': 'Kusonime',
                 'url': base_url,
-                'pages_scraped': pages_successfully_scraped, # Gunakan pelacak yang akurat
+                'pages_scraped': pages_successfully_scraped,
                 'timestamp': datetime.now().isoformat(),
                 'execution_time': execution_time,
                 'data': all_anime,
@@ -232,7 +321,9 @@ class AnimeScraper:
             with open(f'{self.results_dir}/kusonime.json', 'w', encoding='utf-8') as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
             
-            print(f"✓ Kusonime scraped: {len(all_anime)} anime (dari {pages_successfully_scraped} halaman) in {execution_time:.2f}s")
+            self.save_to_history('kusonime', result)
+            
+            print(f"✓ Kusonime scraped: {len(all_anime)} anime in {execution_time:.2f}s")
             return result
             
         except Exception as e:
@@ -242,7 +333,7 @@ class AnimeScraper:
                 'success': False,
                 'site': 'Kusonime',
                 'url': base_url,
-                'pages_scraped': pages_successfully_scraped, # Tampilkan halaman terakhir yg sukses
+                'pages_scraped': pages_successfully_scraped,
                 'timestamp': datetime.now().isoformat(),
                 'execution_time': execution_time,
                 'error': str(e),
@@ -250,6 +341,8 @@ class AnimeScraper:
             }
             with open(f'{self.results_dir}/kusonime.json', 'w', encoding='utf-8') as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
+            
+            self.save_to_history('kusonime', result)
             return result
     
     def scrape_parallel(self, max_workers=2, max_pages_per_site=1):
@@ -260,7 +353,6 @@ class AnimeScraper:
         results = []
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            # Submit jobs dengan parameter max_pages_per_site
             future_otaku = executor.submit(self.scrape_otakudesu, max_pages=max_pages_per_site)
             future_kuso = executor.submit(self.scrape_kusonime, max_pages=max_pages_per_site)
 
@@ -286,6 +378,9 @@ class AnimeScraper:
         end_time = time.time()
         total_time = end_time - start_time
         
+        # Create merged data
+        self.merge_anime_data()
+        
         print(f"\n✓ Total parallel execution time: {total_time:.2f}s")
         print(f"✓ Results saved to '{self.results_dir}/' directory")
         
@@ -297,9 +392,5 @@ class AnimeScraper:
 
 if __name__ == '__main__':
     scraper = AnimeScraper()
-    # Contoh: Scrape 2 halaman dari setiap situs
     print("--- MENJALANKAN SCRAPE UNTUK 2 HALAMAN ---")
     scraper.scrape_parallel(max_pages_per_site=2)
-    
-    # print("\n--- MENJALANKAN SCRAPE UNTUK 1 HALAMAN (DEFAULT) ---")
-    # scraper.scrape_parallel(max_pages_per_site=1)
